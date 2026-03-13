@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ToolSnap Pro - Professional suite of image utilities.">
+    <title>ToolSnap | Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0f172a; --accent: #d32f2f; --bg: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #334155; margin: 0; padding: 40px 20px; }
+        
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2.5rem; letter-spacing: -1px; margin: 0; }
+        .header p { color: #64748b; margin-top: 5px; }
+
+        .wrapper { display: flex; max-width: 1100px; margin: auto; gap: 30px; }
+        
+        .sidebar { width: 250px; background: #ffffff; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: fit-content; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { margin: 15px 0; cursor: pointer; font-weight: 600; padding: 10px; border-radius: 8px; transition: 0.3s; }
+        .sidebar ul li:hover { background: #f1f5f9; color: var(--accent); }
+
+        .content { flex: 1; background: white; padding: 40px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        
+        input { width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #f1f5f9; border-radius: 10px; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        button { background: var(--primary); color: white; padding: 14px 24px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: 600; transition: all 0.3s; border: 2px solid var(--primary); }
+        button:hover { background: white; color: var(--primary); }
+
+        .tool-section { display: none; animation: slideUp 0.6s ease-out; }
+        #yt-tool { display: block; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #loader { display: none; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>ToolSnap</h1>
+           <p>Professional Utility Suite for Creators</p>
+    </header>
+
+    <div class="wrapper">
+        <aside class="sidebar">
+            <h3 style="margin-top:0;">Tools Menu</h3>
+            <ul>
+                <li onclick="showTool('yt-tool')">YouTube Thumbnail</li>
+                <li onclick="showTool('p2j-tool')">PNG to JPG</li>
+                <li onclick="showTool('j2p-tool')">JPG to PNG</li>
+                <li onclick="showTool('comp-tool')">Image Compressor</li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div id="loader"></div>
+            <div id="action-area"></div>
+            
+            <div id="yt-tool" class="tool-section">
+                <h2>Thumbnail Downloader</h2>
+                <input type="text" id="videoUrl" placeholder="Paste YouTube link...">
+                <button onclick="runProcess('yt')">Extract Image</button>
+            </div>
+            
+            <div id="p2j-tool" class="tool-section">
+                <h2>PNG to JPG Converter</h2>
+                <input type="file" id="p2jInput" accept="image/png">
+                <button onclick="runProcess('p2j')">Convert Now</button>
+            </div>
+
+            <div id="j2p-tool" class="tool-section">
+                <h2>JPG to PNG Converter</h2>
+                <input type="file" id="j2pInput" accept="image/jpeg">
+                <button onclick="runProcess('j2p')">Convert Now</button>
+            </div>
+
+            <div id="comp-tool" class="tool-section">
+                <h2>Image Compressor</h2>
+                <input type="file" id="compInput" accept="image/*">
+                <button onclick="runProcess('comp')">Compress Now</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showTool(id) {
+            document.querySelectorAll('.tool-section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            document.getElementById('action-area').innerHTML = '';
+        }
+
+        async function runProcess(type) {
+            const loader = document.getElementById('loader');
+            const area = document.getElementById('action-area');
+            loader.style.display = 'block';
+            area.innerHTML = '';
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            loader.style.display = 'none';
+            
+            // Note: Function calls (processThumbnail, etc) should remain same as before
+            if(type === 'yt') processThumbnail();
+            else if(type === 'p2j') convert('image/jpeg', 'jpg', 'p2jInput');
+            else if(type === 'j2p') convert('image/png', 'png', 'j2pInput');
+            else compress();
+        }
+    </script>
+</body>
+</html>
